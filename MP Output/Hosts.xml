@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="2.0">
+  <Manifest>
+    <Identity>
+      <ID>Hosts</ID>
+      <Version>1.0.0.24</Version>
+    </Identity>
+    <Name>Hosts</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <ModuleTypes>
+      <ProbeActionModuleType ID="Hosts.HostsinHosts.ProbeAction" Accessibility="Public" Batching="false" PassThrough="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="Format"><xsd:simpleType><xsd:restriction base="xsd:string"><xsd:enumeration value="text" /><xsd:enumeration value="csv" /><xsd:enumeration value="json" /><xsd:enumeration value="list" /></xsd:restriction></xsd:simpleType></xsd:element></Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Format" Selector="$Config/Format$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="POSH" TypeID="Windows!Microsoft.Windows.PowerShellProbe"><ScriptName>Get-HostsinHostsFile.ps1</ScriptName><ScriptBody>[CmdletBinding()]
+Param(
+   [Parameter(Mandatory=$True)]
+   [ValidateSet("text","csv","json", "list")]
+   [string] $Format 
+)
+
+$HostsFilePath = "$($Env:WinDir)\system32\Drivers\etc\hosts"
+
+$Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
+$OutputObjects = (Get-Content $HostsFilePath) | ForEach-Object{
+    If ($_ -match $Pattern) {        
+            
+        New-Object PSObject -Property @{
+            IP = $Matches.IP.Trim()
+            Host = $Matches.Host.Trim()
+            Comment = ($_ -split '#', 2)[1]
+        }
+    }
+}
+
+
+
+Switch ($Format) {
+
+    'text' {$OutputObjects  | Format-Table -AutoSize | Out-String -Width 4096 | Write-Host}
+
+    'csv'  {$OutputObjects | ConvertTo-Csv -NoTypeInformation | Out-String -Width 4096 | Write-Host}
+
+    'json' {$OutputObjects | ConvertTo-Json | Out-String -Width 4096 | Write-Host}
+
+    'list' {$OutputObjects  | Format-List  | Out-String -Width 4096  | Write-Host}
+}
+</ScriptBody><Parameters><Parameter><Name>Format</Name><Value>$Config/Format$</Value></Parameter></Parameters><TimeoutSeconds>60</TimeoutSeconds></ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="POSH" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </ProbeActionModuleType>
+      <ProbeActionModuleType ID="Hosts.TestHostsinHosts.ProbeAction" Accessibility="Public" Batching="false" PassThrough="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="POSH" TypeID="Windows!Microsoft.Windows.PowerShellProbe"><ScriptName>Test-HostinHostsFille.ps1</ScriptName><ScriptBody> [CmdletBinding()]
+Param(
+   [Parameter(Mandatory=$True)]
+   [string] $HostName 
+)
+
+$HostsFilePath = "$($Env:WinDir)\system32\Drivers\etc\hosts"
+   
+$HostsFile = Get-Content $HostsFilePath
+if($HostsFile -match [Regex]::Escape($HostName)){
+    Write-host "$HostName found in $HostsFilePath"
+}else{
+    Write-host "$HostName NOT found in $HostsFilePath"
+}
+</ScriptBody><Parameters><Parameter><Name>HostName</Name><Value>$Config/HostName$</Value></Parameter></Parameters><TimeoutSeconds>60</TimeoutSeconds></ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="POSH" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </ProbeActionModuleType>
+      <WriteActionModuleType ID="Hosts.RemoveHostFromHosts.WriteAction" Accessibility="Public" Batching="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction"><ScriptName>Remove-HostFromHostsFile.ps1</ScriptName><ScriptBody>[CmdletBinding()]
+Param(
+   [Parameter(Mandatory=$True)]
+   [string] $HostName 
+)
+
+$HostsFilePath = "$($Env:WinDir)\system32\Drivers\etc\hosts"
+
+Function Test-HostinHostFile{
+ Param ($HostName, $HostsFilePath)
+   
+    $HostsFile = Get-Content $HostsFilePath
+    if($HostsFile -match [Regex]::Escape($HostName)){
+        $true
+    }else{
+        $false
+    }
+}
+
+if(Test-HostinHostFile -HostName $HostName -HostsFilePath $HostsFilePath){
+    $HostsFile = Get-Content $HostsFilePath
+    $HostsFile -notmatch ".*\s+$([Regex]::Escape($Hostname)).*" | Out-File $hostsFilePath 
+
+}else{         
+    Write-Host -Exception "$HostName not found in $HostsFilePath" 
+}
+
+$Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
+(Get-Content $HostsFilePath) | ForEach-Object{
+    If ($_ -match $Pattern) {        
+            
+        New-Object PSObject -Property @{
+            IP = $Matches.IP
+            Host = $Matches.Host
+            Comment = ($_ -split '#', 2)[1]
+        }
+    }
+}
+</ScriptBody><Parameters><Parameter><Name>HostName</Name><Value>$Config/HostName$</Value></Parameter></Parameters><TimeoutSeconds>300</TimeoutSeconds></WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Public" Batching="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="IPAddress" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IPAddress" Selector="$Config/IPAddress$" ParameterType="string" />
+          <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction"><ScriptName>Update-HostinHostsFile.ps1</ScriptName><ScriptBody>[CmdletBinding()]
+Param(
+    [Parameter(Mandatory=$True)]
+    [String]$IPAddress,
+    [Parameter(Mandatory = $True)]
+    [String]$HostName
+)
+
+$HostsFilePath = "$($Env:WinDir)\system32\Drivers\etc\hosts"
+
+Function Add-HostToHostFile{
+[CmdletBinding(SupportsShouldProcess=$True)]
+  Param ($HostName, $IPAddress, $HostsFilePath)
+
+    $HostsFile = Get-Content $HostsFilePath
+    if($PSCmdlet.ShouldProcess($HostsFilePath,"Add $HostName $IPAddress")){
+        Add-Content -Encoding UTF8  $HostsFilePath ("$IPAddress".PadRight(20, " ") + "$HostName")
+    }
+}
+
+Function Test-HostinHostFile{
+ Param ($HostName, $HostsFilePath)
+    $HostsFile = Get-Content $HostsFilePath
+    if($HostsFile -match [Regex]::Escape($HostName)){
+        $True
+    }else{
+        $False
+    }
+}
+
+Function Remove-HostFromHostFile{
+[CmdletBinding(SupportsShouldProcess=$True)]
+  Param ($HostName, $HostsFilePath)
+
+    if(Test-HostinHostFile -HostName $HostName -HostsFilePath $HostsFilePath){
+        $HostsFile = Get-Content $HostsFilePath
+        if($PSCmdlet.ShouldProcess($HostsFilePath,"Remove $HostName")){
+            $HostsFile -notmatch ".*\s+$([Regex]::Escape($Hostname)).*" | Out-File $hostsFilePath 
+        }     
+         
+    }else{         
+         Write-Error -Exception "Could not remove $HostName from in $HostsFilePath" 
+    }
+
+}
+
+if(Test-HostinHostFile -HostName $HostName -HostsFilePath $HostsFilePath){
+ #Remove existing entry
+ Remove-HostFromHostFile -HostName $HostName -HostsFilePath $HostsFilePath
+}
+
+#Add new entry
+Add-HostToHostFile -HostName $HostName -IPAddress $IPAddress -HostsFilePath $HostsFilePath
+
+# Output Entries in file
+
+$Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
+(Get-Content $HostsFilePath) | ForEach-Object{
+    If ($_ -match $Pattern) {        
+            
+        New-Object PSObject -Property @{
+            IP = $Matches.IP.Trim()
+            Host = $Matches.Host.Trim()
+            Comment = ($_ -split '#', 2)[1]
+        }
+    }
+}
+</ScriptBody><Parameters><Parameter><Name>IPAddress</Name><Value>$Config/IPAddress$</Value></Parameter><Parameter><Name>HostName</Name><Value>$Config/HostName$</Value></Parameter></Parameters><TimeoutSeconds>300</TimeoutSeconds></WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Tasks>
+      <Task ID="Hosts.UpdateHostinHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="Hosts.UpdateHostinHosts.WriteAction"><IPAddress>ENTER THE IPADDRESS TO UPDATE</IPAddress><HostName>ENTER THE HOST NAME TO UPDATE</HostName></WriteAction>
+      </Task>
+      <Task ID="Hosts.TestHostinHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
+        <Category>Maintenance</Category>
+        <ProbeAction ID="PA" TypeID="Hosts.TestHostsinHosts.ProbeAction"><HostName>ENTER HOST NAME</HostName></ProbeAction>
+      </Task>
+      <Task ID="Hosts.RemoveHostFromHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="Hosts.RemoveHostFromHosts.WriteAction"><HostName>ENTER THE HOST NAME TO REMOVE</HostName></WriteAction>
+      </Task>
+      <Task ID="Hosts.HostsinHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
+        <Category>Maintenance</Category>
+        <ProbeAction ID="PA" TypeID="Hosts.HostsinHosts.ProbeAction"><Format>csv</Format></ProbeAction>
+      </Task>
+    </Tasks>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Hosts.UpdateHostinHostsFiles.AgentTask">
+          <Name>Hosts File: Update Host in Hosts File</Name>
+          <Description>Updates or add host for entry to hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.TestHostinHostsFiles.AgentTask">
+          <Name>Hosts File: Test Host From Hosts File</Name>
+          <Description>Test is the overridden host is in the hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.RemoveHostFromHostsFiles.AgentTask">
+          <Name>Hosts File: Remove Host From Hosts File</Name>
+          <Description>Remove host from hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.HostsinHostsFiles.AgentTask">
+          <Name>Hosts File: Get Hosts From Hosts File</Name>
+          <Description>Get hosts from hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts">
+          <Name>Hosts File Maintenance</Name>
+          <Description>MP for managing Hosts files on Windows Computers
+
+Documentation and the latest version can be found on GitHub - https://github.com/KeithRochester/Hosts.
+
+If you have any questions or suggestions, please send me a message keith.rochester@unit92.com
+          </Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction">
+          <Name>Get Hosts in Hosts File</Name>
+          <Description>Get Hosts in Hosts File. Outputs in the passed format (test, csv, json, list)</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction" SubElementID="Format">
+          <Name>Format</Name>
+          <Description>Format of output Text, CSV, JSON, List</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.TestHostsinHosts.ProbeAction">
+          <Name>Test Host in Hosts File</Name>
+          <Description>Test if the passed host is in the hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.TestHostsinHosts.ProbeAction" SubElementID="HostName">
+          <Name>Host Name</Name>
+          <Description>Host Name</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.RemoveHostFromHosts.WriteAction">
+          <Name>Remove Host Entry From Hosts File</Name>
+          <Description>Removes host entry from hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.RemoveHostFromHosts.WriteAction" SubElementID="HostName">
+          <Name>Host Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction">
+          <Name>Update Host Entry in Hosts File</Name>
+          <Description>Updates or add host for entry to hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="IPAddress">
+          <Name>IP Address</Name>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="HostName">
+          <Name>Host Name</Name>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="Hosts" Visible="true">
+          <MamlContent><maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Hosts File Maintenanc</maml:title><maml:para>
+                  Documentation and the latest version can be found on GitHub -<maml:navigationLink><maml:linkText>https://github.com/KeithRochester/Hosts</maml:linkText><maml:uri href="https://github.com/KeithRochester/Hosts." /></maml:navigationLink>. 
+                </maml:para><maml:para>
+                  If you have any questions or suggestions, please send me a message <maml:navigationLink><maml:linkText>keith.rochester@unit92.com</maml:linkText><maml:uri href="mailto:keith.rochester@unit92.com?subject=Hosts" /></maml:navigationLink></maml:para></maml:section></MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

@@ -1,0 +1,23 @@
+Type Library\Modules\Probe Actions\HostsinHostsFile.mpx*Hosts.HostsinHosts.ProbeAction*4*6*ProbeActionModuleType
+Type Library\Modules\Probe Actions\TestHostinHostsFile.mpx*Hosts.TestHostsinHosts.ProbeAction*3*8*ProbeActionModuleType
+Type Library\Modules\Write Actions\RemoveHostfromHostsFile.mpx*Hosts.RemoveHostFromHosts.WriteAction*3*8*WriteActionModuleType
+Type Library\Modules\Write Actions\UpdateHostinHostsFile.mpx*Hosts.UpdateHostinHosts.WriteAction*4*8*WriteActionModuleType
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.UpdateHostinHostsFiles.AgentTask*5*8*Task
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.TestHostinHostsFiles.AgentTask*12*8*Task
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.RemoveHostFromHostsFiles.AgentTask*18*8*Task
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.HostsinHostsFiles.AgentTask*24*8*Task
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.UpdateHostinHostsFiles.AgentTask*34*10*DisplayString
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.TestHostinHostsFiles.AgentTask*38*10*DisplayString
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.RemoveHostFromHostsFiles.AgentTask*42*10*DisplayString
+Health Model\Tasks\Host File Maintainance.mptg.mpx*Hosts.HostsinHostsFiles.AgentTask*46*10*DisplayString
+ManagementPack.mpx*Hosts*4*10*DisplayString
+Type Library\Modules\Probe Actions\HostsinHostsFile.mpx*Hosts.HostsinHosts.ProbeAction*48*10*DisplayString
+Type Library\Modules\Probe Actions\HostsinHostsFile.mpx*Hosts.HostsinHosts.ProbeAction*52*10*DisplayString*SubElementID*Format
+Type Library\Modules\Probe Actions\TestHostinHostsFile.mpx*Hosts.TestHostsinHosts.ProbeAction*37*10*DisplayString
+Type Library\Modules\Probe Actions\TestHostinHostsFile.mpx*Hosts.TestHostsinHosts.ProbeAction*41*10*DisplayString*SubElementID*HostName
+Type Library\Modules\Write Actions\RemoveHostfromHostsFile.mpx*Hosts.RemoveHostFromHosts.WriteAction*37*10*DisplayString
+Type Library\Modules\Write Actions\RemoveHostfromHostsFile.mpx*Hosts.RemoveHostFromHosts.WriteAction*41*10*DisplayString*SubElementID*HostName
+Type Library\Modules\Write Actions\UpdateHostinHostsFile.mpx*Hosts.UpdateHostinHosts.WriteAction*46*10*DisplayString
+Type Library\Modules\Write Actions\UpdateHostinHostsFile.mpx*Hosts.UpdateHostinHosts.WriteAction*50*10*DisplayString*SubElementID*IPAddress
+Type Library\Modules\Write Actions\UpdateHostinHostsFile.mpx*Hosts.UpdateHostinHosts.WriteAction*53*10*DisplayString*SubElementID*HostName
+ManagementPack.mpx*Hosts*15*12*KnowledgeArticle

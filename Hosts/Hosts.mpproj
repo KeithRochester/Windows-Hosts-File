@@ -1,0 +1,97 @@
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{4a36e163-55ff-44b6-b793-2e1a60cfc413}</ProjectGuid>
+    <RootNamespace>Hosts</RootNamespace>
+    <Name>Hosts</Name>
+    <ManagementPackName>Hosts</ManagementPackName>
+    <Version>1.0.0.0</Version>
+    <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
+    <MpFrameworkProfile>OM</MpFrameworkProfile>
+    <ProductVersion>1.1.0.0</ProductVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\MP Output\</OutputPath>
+    <GenerateSealed>True</GenerateSealed>
+    <Company>Unit 92 Ltd</Company>
+    <Copyright>Copyright (c) Unit 92 Ltd. All rights reserved.</Copyright>
+    <DelaySigning>False</DelaySigning>
+    <AssemblyOriginatorKeyFile>..\..\U92SMF.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DelaySigning>false</DelaySigning>
+    <Company>MyCompany</Company>
+    <Copyright>Copyright (c) MyCompany. All rights reserved.</Copyright>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Library">
+      <Alias>SC</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.Windows.Library">
+      <Alias>Windows</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Health.Library">
+      <Alias>Health</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Library">
+      <Alias>System</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Visualization.Library">
+      <Alias>Visualization</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Health Model" />
+    <Folder Include="Health Model\Tasks" />
+    <Folder Include="Resources" />
+    <Folder Include="Resources\Scripts" />
+    <Folder Include="Type Library" />
+    <Folder Include="Type Library\Modules" />
+    <Folder Include="Type Library\Modules\Probe Actions" />
+    <Folder Include="Type Library\Modules\Write Actions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Health Model\Tasks\Host File Maintainance.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Health Model\Tasks\Host File Maintainance.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Health Model\Tasks\Host File Maintainance.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="ManagementPack.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Type Library\Modules\Probe Actions\HostsinHostsFile.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Type Library\Modules\Probe Actions\TestHostinHostsFile.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Type Library\Modules\Write Actions\RemoveHostfromHostsFile.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Type Library\Modules\Write Actions\UpdateHostinHostsFile.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Scripts\Get-HostsinHostsFile.ps1" />
+    <EmbeddedResource Include="Resources\Scripts\Remove-HostFromHostsFile.ps1" />
+    <EmbeddedResource Include="Resources\Scripts\Test-HostinHostsFille.ps1" />
+    <EmbeddedResource Include="Resources\Scripts\Update-HostinHostsFile.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
+</Project>

@@ -1,0 +1,59 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Public" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="IPAddress" type="xsd:string" />
+          <xsd:element minOccurs="1" name="HostName" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IPAddress" Selector="$Config/IPAddress$" ParameterType="string" />
+          <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <WriteAction ID="Script" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                <ScriptName>Update-HostinHostsFile.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Resources/Scripts/Update-HostinHostsFile.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>IPAddress</Name>
+                    <Value>$Config/IPAddress$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>HostName</Name>
+                    <Value>$Config/HostName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>300</TimeoutSeconds>
+              </WriteAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script">
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
+        <InputType>System!System.BaseData</InputType>
+      </WriteActionModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction">
+          <Name>Update Host Entry in Hosts File</Name>
+          <Description>Updates or add host for entry to hosts file</Description>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="IPAddress">
+          <Name>IP Address</Name>
+        </DisplayString>
+        <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="HostName">
+          <Name>Host Name</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

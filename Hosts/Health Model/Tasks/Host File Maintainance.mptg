@@ -1,0 +1,76 @@
+<TemplateGroup>
+  <Instances>
+    <Instance ID="Instance616d2d1cd17245a38600b9a340c37f70" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Accessibility>Internal</Accessibility>
+        <Id>UpdateHostinHostsFiles.AgentTask</Id>
+        <DisplayName>Hosts File: Update Host in Hosts File</DisplayName>
+        <Description>pdates or add host for entry to hosts file</Description>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <ProbeActionConfig>&lt;Format&gt;csv&lt;/Format&gt;</ProbeActionConfig>
+        <ProbeActionType />
+        <WriteActionId>WA</WriteActionId>
+        <WriteActionConfig>&lt;IPAddress&gt;ENTER THE IPADDRESS TO UPDATE&lt;/IPAddress&gt;&lt;HostName&gt;ENTER THE HOST NAME TO UPDATE&lt;/HostName&gt;</WriteActionConfig>
+        <WriteActionType>Hosts.UpdateHostinHosts.WriteAction</WriteActionType>
+      </CustomTaskConfig>
+    </Instance>
+    <Instance ID="Instance1e50698f72b040deb935cd071f1cf69d" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Accessibility>Internal</Accessibility>
+        <Id>TestHostinHostsFiles.AgentTask</Id>
+        <DisplayName>Hosts File: Test Host From Hosts File</DisplayName>
+        <Description>Test is the overriden host is in thehosts file</Description>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <ProbeActionConfig>&lt;HostName&gt;ENTER HOST NAME&lt;/HostName&gt;</ProbeActionConfig>
+        <ProbeActionType>Hosts.TestHostsinHosts.ProbeAction</ProbeActionType>
+        <WriteActionId>WA</WriteActionId>
+      </CustomTaskConfig>
+    </Instance>
+    <Instance ID="Instance910fca1c1d434d9aad4af3664d9cf836" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Accessibility>Internal</Accessibility>
+        <Id>RemoveHostFromHostsFiles.AgentTask</Id>
+        <DisplayName>Hosts File: Remove Host From Hosts File</DisplayName>
+        <Description>Remove host from hosts file</Description>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <ProbeActionConfig>&lt;Format&gt;csv&lt;/Format&gt;</ProbeActionConfig>
+        <ProbeActionType />
+        <WriteActionId>WA</WriteActionId>
+        <WriteActionConfig>&lt;HostName&gt;ENTER THE HOST NAME TO REMOVE&lt;/HostName&gt;</WriteActionConfig>
+        <WriteActionType>Hosts.RemoveHostFromHosts.WriteAction</WriteActionType>
+      </CustomTaskConfig>
+    </Instance>
+    <Instance ID="Instance1d605c0145f24c70889890d23be9b366" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.CustomTask" Version="1.0.0.0">
+      <CustomTaskConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Accessibility>Internal</Accessibility>
+        <Id>HostsinHostsFiles.AgentTask</Id>
+        <DisplayName>Hosts File: Get Hosts From Hosts File</DisplayName>
+        <Description>Get hosts from hosts file</Description>
+        <Target>Windows!Microsoft.Windows.Computer</Target>
+        <Enabled>true</Enabled>
+        <Category>Maintenance</Category>
+        <Timeout>300</Timeout>
+        <Remotable>true</Remotable>
+        <ProbeActionId>PA</ProbeActionId>
+        <ProbeActionConfig>&lt;Format&gt;csv&lt;/Format&gt;</ProbeActionConfig>
+        <ProbeActionType>Hosts.HostsinHosts.ProbeAction</ProbeActionType>
+        <WriteActionId>WA</WriteActionId>
+      </CustomTaskConfig>
+    </Instance>
+  </Instances>
+</TemplateGroup>
