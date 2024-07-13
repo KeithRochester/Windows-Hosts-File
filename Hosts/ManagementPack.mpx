@@ -2,7 +2,7 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Hosts">
-          <Name>Hosts File Maintenance</Name>
+          <Name>Windows Hosts File Maintenance</Name>
           <Description>MP for managing Hosts files on Windows Computers
 
 Documentation and the latest version can be found on GitHub - https://github.com/KeithRochester/Hosts.

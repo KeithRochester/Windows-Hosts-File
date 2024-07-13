@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Hosts</ID>
-      <Version>1.0.0.24</Version>
+      <Version>1.0.0.28</Version>
     </Identity>
     <Name>Hosts</Name>
     <References>
@@ -20,7 +20,7 @@
   </Manifest>
   <TypeDefinitions>
     <ModuleTypes>
-      <ProbeActionModuleType ID="Hosts.HostsinHosts.ProbeAction" Accessibility="Public" Batching="false" PassThrough="false">
+      <ProbeActionModuleType ID="Hosts.HostsinHosts.ProbeAction" Accessibility="Internal" Batching="false" PassThrough="false">
         <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="Format"><xsd:simpleType><xsd:restriction base="xsd:string"><xsd:enumeration value="text" /><xsd:enumeration value="csv" /><xsd:enumeration value="json" /><xsd:enumeration value="list" /></xsd:restriction></xsd:simpleType></xsd:element></Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="Format" Selector="$Config/Format$" ParameterType="string" />
@@ -71,39 +71,7 @@ Switch ($Format) {
         <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
         <InputType>System!System.BaseData</InputType>
       </ProbeActionModuleType>
-      <ProbeActionModuleType ID="Hosts.TestHostsinHosts.ProbeAction" Accessibility="Public" Batching="false" PassThrough="false">
-        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
-        <OverrideableParameters>
-          <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
-        </OverrideableParameters>
-        <ModuleImplementation Isolation="Any">
-          <Composite>
-            <MemberModules>
-              <ProbeAction ID="POSH" TypeID="Windows!Microsoft.Windows.PowerShellProbe"><ScriptName>Test-HostinHostsFille.ps1</ScriptName><ScriptBody> [CmdletBinding()]
-Param(
-   [Parameter(Mandatory=$True)]
-   [string] $HostName 
-)
-
-$HostsFilePath = "$($Env:WinDir)\system32\Drivers\etc\hosts"
-   
-$HostsFile = Get-Content $HostsFilePath
-if($HostsFile -match [Regex]::Escape($HostName)){
-    Write-host "$HostName found in $HostsFilePath"
-}else{
-    Write-host "$HostName NOT found in $HostsFilePath"
-}
-</ScriptBody><Parameters><Parameter><Name>HostName</Name><Value>$Config/HostName$</Value></Parameter></Parameters><TimeoutSeconds>60</TimeoutSeconds></ProbeAction>
-            </MemberModules>
-            <Composition>
-              <Node ID="POSH" />
-            </Composition>
-          </Composite>
-        </ModuleImplementation>
-        <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
-        <InputType>System!System.BaseData</InputType>
-      </ProbeActionModuleType>
-      <WriteActionModuleType ID="Hosts.RemoveHostFromHosts.WriteAction" Accessibility="Public" Batching="false">
+      <WriteActionModuleType ID="Hosts.RemoveHostFromHosts.WriteAction" Accessibility="Internal" Batching="false">
         <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="HostName" Selector="$Config/HostName$" ParameterType="string" />
@@ -159,7 +127,7 @@ $Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
         <OutputType>Windows!Microsoft.Windows.SerializedObjectData</OutputType>
         <InputType>System!System.BaseData</InputType>
       </WriteActionModuleType>
-      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Public" Batching="false">
+      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Internal" Batching="false">
         <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="IPAddress" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" minOccurs="1" name="HostName" type="xsd:string" /></Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="IPAddress" Selector="$Config/IPAddress$" ParameterType="string" />
@@ -251,11 +219,7 @@ $Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
     <Tasks>
       <Task ID="Hosts.UpdateHostinHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
         <Category>Maintenance</Category>
-        <WriteAction ID="WA" TypeID="Hosts.UpdateHostinHosts.WriteAction"><IPAddress>ENTER THE IPADDRESS TO UPDATE</IPAddress><HostName>ENTER THE HOST NAME TO UPDATE</HostName></WriteAction>
-      </Task>
-      <Task ID="Hosts.TestHostinHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
-        <Category>Maintenance</Category>
-        <ProbeAction ID="PA" TypeID="Hosts.TestHostsinHosts.ProbeAction"><HostName>ENTER HOST NAME</HostName></ProbeAction>
+        <WriteAction ID="WA" TypeID="Hosts.UpdateHostinHosts.WriteAction"><IPAddress>ENTER THE IP ADDRESS TO UPDATE</IPAddress><HostName>ENTER THE HOST NAME TO UPDATE</HostName></WriteAction>
       </Task>
       <Task ID="Hosts.RemoveHostFromHostsFiles.AgentTask" Accessibility="Internal" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Timeout="300" Remotable="true">
         <Category>Maintenance</Category>
@@ -272,22 +236,18 @@ $Pattern = '^(?&lt;IP&gt;\d{1,3}(\.\d{1,3}){3})\s+(?&lt;Host&gt;.+)$'
       <DisplayStrings>
         <DisplayString ElementID="Hosts.UpdateHostinHostsFiles.AgentTask">
           <Name>Hosts File: Update Host in Hosts File</Name>
-          <Description>Updates or add host for entry to hosts file</Description>
-        </DisplayString>
-        <DisplayString ElementID="Hosts.TestHostinHostsFiles.AgentTask">
-          <Name>Hosts File: Test Host From Hosts File</Name>
-          <Description>Test is the overridden host is in the hosts file</Description>
+          <Description>Updates or adds host for entry to hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.RemoveHostFromHostsFiles.AgentTask">
           <Name>Hosts File: Remove Host From Hosts File</Name>
-          <Description>Remove host from hosts file</Description>
+          <Description>Removes host entry from hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.HostsinHostsFiles.AgentTask">
           <Name>Hosts File: Get Hosts From Hosts File</Name>
-          <Description>Get hosts from hosts file</Description>
+          <Description>Get hosts from hosts file. Outputs as either list, table, csv, or json</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts">
-          <Name>Hosts File Maintenance</Name>
+          <Name>Windows Hosts File Maintenance</Name>
           <Description>MP for managing Hosts files on Windows Computers
 
 Documentation and the latest version can be found on GitHub - https://github.com/KeithRochester/Hosts.
@@ -296,20 +256,12 @@ If you have any questions or suggestions, please send me a message keith.rochest
           </Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction">
-          <Name>Get Hosts in Hosts File</Name>
-          <Description>Get Hosts in Hosts File. Outputs in the passed format (test, csv, json, list)</Description>
+          <Name>Get Hosts from Hosts File</Name>
+          <Description>Get hosts from hosts file. Outputs as either list, table, csv, or json.</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction" SubElementID="Format">
           <Name>Format</Name>
           <Description>Format of output Text, CSV, JSON, List</Description>
-        </DisplayString>
-        <DisplayString ElementID="Hosts.TestHostsinHosts.ProbeAction">
-          <Name>Test Host in Hosts File</Name>
-          <Description>Test if the passed host is in the hosts file</Description>
-        </DisplayString>
-        <DisplayString ElementID="Hosts.TestHostsinHosts.ProbeAction" SubElementID="HostName">
-          <Name>Host Name</Name>
-          <Description>Host Name</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.RemoveHostFromHosts.WriteAction">
           <Name>Remove Host Entry From Hosts File</Name>
@@ -320,13 +272,15 @@ If you have any questions or suggestions, please send me a message keith.rochest
         </DisplayString>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction">
           <Name>Update Host Entry in Hosts File</Name>
-          <Description>Updates or add host for entry to hosts file</Description>
+          <Description>Updates or adds host for entry to hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="IPAddress">
           <Name>IP Address</Name>
+          <Description>IP address of host to add/update to hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="HostName">
           <Name>Host Name</Name>
+          <Description>Host name of host to add/update to hosts file</Description>
         </DisplayString>
       </DisplayStrings>
       <KnowledgeArticles>

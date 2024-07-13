@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-    <ProbeActionModuleType ID="Hosts.HostsinHosts.ProbeAction" Accessibility="Public" Batching="false" PassThrough="false">
+    <ProbeActionModuleType ID="Hosts.HostsinHosts.ProbeAction" Accessibility="Internal" Batching="false" PassThrough="false">
       <Configuration>
         <xsd:element minOccurs="1" name="Format" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
           <xsd:simpleType>
@@ -46,8 +46,8 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction">
-          <Name>Get Hosts in Hosts File</Name>
-          <Description>Get Hosts in Hosts File. Outputs in the passed format (test, csv, json, list)</Description>
+          <Name>Get Hosts from Hosts File</Name>
+          <Description>Get hosts from hosts file. Outputs as either list, table, csv, or json.</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.HostsinHosts.ProbeAction" SubElementID="Format">
           <Name>Format</Name>

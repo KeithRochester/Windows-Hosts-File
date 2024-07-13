@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Public" Batching="false">
+      <WriteActionModuleType ID="Hosts.UpdateHostinHosts.WriteAction" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" name="IPAddress" type="xsd:string" />
           <xsd:element minOccurs="1" name="HostName" type="xsd:string" />
@@ -45,13 +45,15 @@
       <DisplayStrings>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction">
           <Name>Update Host Entry in Hosts File</Name>
-          <Description>Updates or add host for entry to hosts file</Description>
+          <Description>Updates or adds host for entry to hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="IPAddress">
           <Name>IP Address</Name>
+          <Description>IP address of host to add/update to hosts file</Description>
         </DisplayString>
         <DisplayString ElementID="Hosts.UpdateHostinHosts.WriteAction" SubElementID="HostName">
           <Name>Host Name</Name>
+          <Description>Host name of host to add/update to hosts file</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

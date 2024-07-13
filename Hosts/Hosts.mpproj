@@ -77,9 +77,6 @@
     <Compile Include="Type Library\Modules\Probe Actions\HostsinHostsFile.mpx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Type Library\Modules\Probe Actions\TestHostinHostsFile.mpx">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Type Library\Modules\Write Actions\RemoveHostfromHostsFile.mpx">
       <SubType>Code</SubType>
     </Compile>
@@ -90,7 +87,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Scripts\Get-HostsinHostsFile.ps1" />
     <EmbeddedResource Include="Resources\Scripts\Remove-HostFromHostsFile.ps1" />
-    <EmbeddedResource Include="Resources\Scripts\Test-HostinHostsFille.ps1" />
     <EmbeddedResource Include="Resources\Scripts\Update-HostinHostsFile.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />

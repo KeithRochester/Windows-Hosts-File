@@ -1,6 +1,6 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
     <ModuleTypes>
-      <WriteActionModuleType ID="Hosts.RemoveHostFromHosts.WriteAction" Accessibility="Public" Batching="false">
+      <WriteActionModuleType ID="Hosts.RemoveHostFromHosts.WriteAction" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" name="HostName" type="xsd:string" />
         </Configuration>
