@@ -1,7 +1,7 @@
 # Hosts File: Update Host in Hosts File
 
 ## Description
-Updates or adds host for entry to hosts file. 
+Updates or adds host entry to hosts file. 
 
 **Target**: Microsoft Windows Computer (Microsoft.Windows.Computer)
 
