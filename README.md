@@ -5,5 +5,5 @@ Using the hosts file for managing name resolution really should be a last resort
 The Management Pack contains 3 tasks. Links to documentation and examples below
 
 * [Hosts File: Get Hosts from Hosts File](<Documentation/Get Hosts from Hosts File.md>)
-* [Hosts File: Update Host ins Hosts File](<Documentation/Update Host In Hosts File.md>)
+* [Hosts File: Update Host in Hosts File](<Documentation/Update Host In Hosts File.md>)
 * [Hosts File: Remove Host from Hosts File](<Documentation/Remove Host from Hosts File.md>)
